@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
-import { createDice } from "./js/die";
-import { createArena } from "./js/arena";
-import { subscribe } from "./js/viewport";
+import { createDice } from "./die";
+import { createArena } from "./arena";
+import { subscribe } from "./viewport";
 
 const scene = new THREE.Scene();
 

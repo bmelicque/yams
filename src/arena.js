@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
-import { maxX } from "../main";
+import { maxX } from "./main";
 import { subscribe } from "./viewport";
 
 function createFloor(scene, physicsWorld) {
