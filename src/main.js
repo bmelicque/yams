@@ -1,10 +1,12 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
-import { createDice } from "./die";
+import { createDice, Die } from "./die";
 import { createArena } from "./arena";
 import { subscribe } from "./viewport";
 
 const scene = new THREE.Scene();
+
+let throwCount = 1;
 
 function createLighting() {
 	const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -33,7 +35,7 @@ const aspect = width / height;
 const renderer = new THREE.WebGLRenderer({ canvas: canvas });
 renderer.shadowMap.enabled = true;
 subscribe((w, h) => renderer.setSize(w, h));
-document.body.appendChild(renderer.domElement);
+// document.body.appendChild(renderer.domElement);
 
 const camera = new THREE.PerspectiveCamera(20, aspect, 0.1, 300);
 camera.position.set(0, 30, 20);
@@ -54,13 +56,13 @@ physicsWorld.defaultContactMaterial.restitution = 0.3;
 createArena(scene, physicsWorld);
 
 const NUMBER_OF_DICE = 5;
-const dice = new Array(NUMBER_OF_DICE);
+Die.dice = new Array(NUMBER_OF_DICE);
 for (let i = 0; i < NUMBER_OF_DICE; i++) {
-	dice[i] = createDice(scene, physicsWorld);
+	Die.dice[i] = createDice(scene, physicsWorld);
 }
 const ids = {};
 for (let i = 0; i < NUMBER_OF_DICE; i++) {
-	const mesh = dice[i].mesh;
+	const mesh = Die.dice[i].mesh;
 	ids[mesh.uuid] = i;
 	for (let child of mesh.children) {
 		ids[child.uuid] = i;
@@ -68,7 +70,7 @@ for (let i = 0; i < NUMBER_OF_DICE; i++) {
 }
 
 function throwDice() {
-	dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
+	Die.dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
 }
 throwDice();
 
@@ -81,8 +83,8 @@ function findHoveredDie(e) {
 	const raycaster = new THREE.Raycaster();
 	raycaster.setFromCamera(mouse, camera);
 
-	var intersects = raycaster.intersectObjects(dice.map(({ mesh }) => mesh));
-	return dice[ids[intersects[0]?.object.uuid]];
+	var intersects = raycaster.intersectObjects(Die.dice.map(({ mesh }) => mesh));
+	return Die.dice[ids[intersects[0]?.object.uuid]];
 }
 
 document.addEventListener("mousedown", function (e) {
@@ -93,23 +95,40 @@ document.addEventListener("mousedown", function (e) {
 function animate() {
 	physicsWorld.fixedStep();
 
-	for (let die of dice) {
+	for (let die of Die.dice) {
 		die.mesh.position.copy(die.body.position);
 		die.mesh.quaternion.copy(die.body.quaternion);
 	}
-
-	const results = dice
-		.filter((die) => die.sleeping)
-		.map((die) => die.getTopFace())
-		.filter(Boolean);
-	document.getElementById("results").innerHTML = results.join(" ");
 
 	// redraw the scene
 	renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
 
-document.getElementById("relaunch").addEventListener("click", () => {
+document.getElementById("throw").addEventListener("click", () => {
+	console.log("click");
+	console.log(throwCount);
+	switch (throwCount) {
+		case 0:
+			document.getElementById("throw").innerHTML = "RELANCER";
+			throwCount++;
+			break;
+		case 1:
+			document.getElementById("throw").innerHTML = "DERNIÈRE CHANCE...";
+			throwCount++;
+			break;
+		case 2:
+			document.getElementById("throw").innerHTML = "RECOMMENCER";
+			throwCount++;
+			break;
+		case 3:
+			for (let die of Die.dice) {
+				die.unlock();
+			}
+			throwCount = 0;
+			document.getElementById("throw").innerHTML = "LANCER";
+			break;
+	}
 	throwDice();
 });
 

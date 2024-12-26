@@ -4,7 +4,8 @@ import { maxX } from "./main";
 import { subscribe } from "./viewport";
 
 function createFloor(scene, physicsWorld) {
-	const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshStandardMaterial({ color: 0x0f4d0f }));
+	// 0x0f4d0f
+	const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000), new THREE.MeshStandardMaterial({ color: 0x888888 }));
 	mesh.receiveShadow = true;
 	mesh.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI * 0.5);
 	scene.add(mesh);

@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
+import { handleResults } from "./results";
 
 const PARAMS = {
 	SEGMENTS: 50,
@@ -181,10 +182,12 @@ export function createDice(scene, physicsWorld) {
 	return new Die(mesh, body);
 }
 
-class Die {
+export class Die {
 	static hoveredColor = "orange";
 	static lockedColor = "orange";
 	static defaultColor = "black";
+	static dice = [];
+	static stable = [];
 
 	constructor(mesh, body) {
 		this.mesh = mesh;
@@ -196,7 +199,9 @@ class Die {
 			const face = this.getTopFace();
 			this.body.allowSleep = face == null;
 			this.sleeping = face != null;
-			console.log(face);
+			Die.stable.push(this);
+			if (Die.stable.length === 5) handleResults();
+
 			// TODO: rethrow if face is null
 		});
 	}
@@ -224,6 +229,7 @@ class Die {
 		if (this.locked) {
 			return;
 		}
+		Die.stable = Die.stable.filter((el) => el !== this);
 		this.body.allowSleep = true;
 
 		// reset from previous throw
@@ -241,6 +247,11 @@ class Die {
 		const xImpulse = -(5 + 8 * Math.random());
 		const zImpulse = -(5 + 8 * Math.random());
 		this.body.applyImpulse(new CANNON.Vec3(xImpulse, 0, zImpulse));
+	}
+
+	unlock() {
+		this.locked = false;
+		this.changeDotColor(Die.defaultColor);
 	}
 
 	getTopFace() {
