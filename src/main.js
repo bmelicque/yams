@@ -37,15 +37,31 @@ renderer.shadowMap.enabled = true;
 subscribe((w, h) => renderer.setSize(w, h));
 // document.body.appendChild(renderer.domElement);
 
-const camera = new THREE.PerspectiveCamera(20, aspect, 0.1, 300);
+export const CAMERA = {
+	/** degrees */
+	fov: 20,
+	/** radians */
+	orientation: Math.PI * 0.3,
+	position: {
+		x: 0,
+		y: 30,
+		z: 20,
+	},
+
+	/** angle between horizontal plane and top of camera */
+	get topAngle() {
+		return this.orientation - (this.fov * Math.PI) / 360;
+	},
+
+	/** angle between horizontal plane and bottom of camera */
+	get bottomAngle() {
+		return this.orientation + (this.fov * Math.PI) / 360;
+	},
+};
+const camera = new THREE.PerspectiveCamera(CAMERA.fov, aspect, 5, 50);
 camera.position.set(0, 30, 20);
-camera.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), Math.PI * 0.3);
-export let maxX;
-subscribe((w, h) => {
-	camera.aspect = w / h;
-	camera.updateProjectionMatrix();
-	maxX = (14 * camera.aspect) / 2;
-});
+/** radians */
+camera.quaternion.setFromAxisAngle(new THREE.Vector3(-1, 0, 0), CAMERA.orientation);
 
 const physicsWorld = new CANNON.World({
 	gravity: new CANNON.Vec3(0, -50, 0),
@@ -70,6 +86,7 @@ for (let i = 0; i < NUMBER_OF_DICE; i++) {
 }
 
 function throwDice() {
+	const maxX = (7 * innerWidth) / innerHeight; // this is basically empiric for now
 	Die.dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
 }
 throwDice();
@@ -106,8 +123,6 @@ function animate() {
 renderer.setAnimationLoop(animate);
 
 document.getElementById("throw").addEventListener("click", () => {
-	console.log("click");
-	console.log(throwCount);
 	switch (throwCount) {
 		case 0:
 			document.getElementById("throw").innerHTML = "RELANCER";

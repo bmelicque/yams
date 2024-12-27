@@ -1,5 +1,3 @@
-const menu = document.getElementById("menu");
-
 const subscribers = [];
 
 export function subscribe(cb) {

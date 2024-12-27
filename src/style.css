@@ -10,7 +10,7 @@ body {
     font-weight: 400;
     font-style: normal;
     background-color: var(--bg);
-    min-height: 100vh;
+    min-height: 100svh;
 }
 
 #loader {
@@ -165,14 +165,14 @@ menu {
 
 #canvas {
     flex: 1;
-    height: 90vh;
+    height: 90svh;
     width: 100vw;
 }
 
 .pop-up {
     animation: fade-in ease-in-out 1s;
     position: absolute;
-    height: 100vh;
+    height: 100svh;
     top: 0;
     bottom: 0;
     left: 0;
@@ -182,7 +182,7 @@ menu {
 }
 .pop-up__dialog {
     position: absolute;
-    top: 50vh;
+    top: 50svh;
     left: 50vw;
     transform: translate(-50%, -50%);
     font-size: 4rem;
