@@ -143,3 +143,7 @@ document.body.addEventListener("mousemove", (e) => {
 	currentDie = die;
 	document.body.style.cursor = die ? "pointer" : "default";
 });
+
+const loader = document.getElementById("loader");
+loader.style.opacity = 0;
+loader.style.zIndex = -10;
