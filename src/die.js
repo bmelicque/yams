@@ -197,12 +197,11 @@ export class Die {
 
 		this.body.addEventListener("sleep", () => {
 			const face = this.getTopFace();
+			if (!face) return this.impulse();
 			this.body.allowSleep = face == null;
 			this.sleeping = face != null;
 			Die.stable.push(this);
 			if (Die.stable.length === 5) handleResults();
-
-			// TODO: rethrow if face is null
 		});
 	}
 
@@ -247,6 +246,19 @@ export class Die {
 		const xImpulse = -(5 + 8 * Math.random());
 		const zImpulse = -(5 + 8 * Math.random());
 		this.body.applyImpulse(new CANNON.Vec3(xImpulse, 0, zImpulse));
+	}
+
+	impulse() {
+		if (this.locked) {
+			return;
+		}
+		this.body.velocity.setZero();
+		this.body.angularVelocity.setZero();
+
+		const xImpulse = 8 * Math.random() - 4;
+		const zImpulse = 8 * Math.random() - 4;
+		const yImpulse = 2 + 4 * Math.random();
+		this.body.applyImpulse(new CANNON.Vec3(xImpulse, yImpulse, zImpulse));
 	}
 
 	unlock() {

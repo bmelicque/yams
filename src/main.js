@@ -140,8 +140,8 @@ document.getElementById("throw").addEventListener("click", () => {
 			for (let die of Die.dice) {
 				die.unlock();
 			}
-			throwCount = 0;
-			document.getElementById("throw").innerHTML = "LANCER";
+			throwCount = 1;
+			document.getElementById("throw").innerHTML = "RELANCER";
 			break;
 	}
 	throwDice();
