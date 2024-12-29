@@ -5,7 +5,8 @@
         "rootDir": "./",
         "checkJs": true,
         "noEmit": true,
-        "moduleResolution": "node10"
+        "moduleResolution": "node16",
+        "module": "node16"
     },
     "exclude": [
         "node_modules",

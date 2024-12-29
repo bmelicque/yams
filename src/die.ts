@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import { handleResults } from "./results";
+import { AppState, getThrowCount, updateAppState } from "./state";
 
 const PARAMS = {
 	SEGMENTS: 50,
@@ -206,6 +207,7 @@ export class Die {
 			this.body.allowSleep = face == null;
 			Die.stable.push(this);
 			if (Die.stable.length === 5) handleResults();
+			if (getThrowCount() === 3) updateAppState(AppState.ScorePage);
 		});
 	}
 
@@ -270,6 +272,12 @@ export class Die {
 		this.changeDotColor(Die.defaultColor);
 	}
 
+	static unlockAll() {
+		for (let die of this.dice) {
+			die.unlock();
+		}
+	}
+
 	getTopFace() {
 		const euler = new CANNON.Vec3();
 		this.body.quaternion.toEuler(euler);
@@ -297,4 +305,9 @@ export class Die {
 				return undefined;
 		}
 	}
+}
+
+export function throwDice() {
+	const maxX = (7 * innerWidth) / innerHeight; // this is basically empiric for now
+	Die.dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
 }

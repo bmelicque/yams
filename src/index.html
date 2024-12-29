@@ -14,6 +14,7 @@
 	</head>
 	<body>
 		<div id="loader">
+			<h1>Yam's !</h1>
 			<div class="loader__wrapper">
 				<div class="loader__icon loader__icon--one">
 					<div class="loader__icon__dots--one"></div>
@@ -26,6 +27,7 @@
 					<div class="loader__icon__dots--two"></div>
 				</div>
 			</div>
+			<button id="start">COMMENCER</button>
 		</div>
 		<div id="playing">
 			<canvas id="canvas"></canvas>
@@ -35,6 +37,7 @@
 			</menu>
 		</div>
 		<div id="score">
+			<h2 id="remaining">LANCERS RESTANTS: <span>2</span></h2>
 			<div class="table">
 				<div>1</div>
 				<div class="score" data-id="1"></div>
@@ -65,6 +68,7 @@
 			</div>
 			<menu id="menu">
 				<button id="throw">NOUVEAU TOUR</button>
+				<button id="cancel">RETOUR</button>
 			</menu>
 		</div>
 		<script type="module" src="/main.ts"></script>

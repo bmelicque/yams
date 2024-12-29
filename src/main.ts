@@ -3,10 +3,9 @@ import * as CANNON from "cannon-es";
 import { createDice, Die } from "./die";
 import { createArena } from "./arena";
 import { subscribe } from "./viewport";
+import { AppState, getAppState } from "./state";
 
 const scene = new THREE.Scene();
-
-let throwCount = 1;
 
 function createLighting() {
 	const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -85,11 +84,6 @@ for (let i = 0; i < NUMBER_OF_DICE; i++) {
 	}
 }
 
-function throwDice() {
-	const maxX = (7 * innerWidth) / innerHeight; // this is basically empiric for now
-	Die.dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
-}
-
 function findHoveredDie(e) {
 	const mouse = new THREE.Vector2(
 		(e.clientX / renderer.domElement.clientWidth) * 2 - 1,
@@ -105,7 +99,7 @@ function findHoveredDie(e) {
 
 let currentDie = null;
 document.body.addEventListener("mousemove", (e) => {
-	if (appState !== AppState.Playing) return;
+	if (getAppState() !== AppState.Playing) return;
 	const die = findHoveredDie(e);
 	if (die == currentDie) {
 		return;
@@ -117,7 +111,7 @@ document.body.addEventListener("mousemove", (e) => {
 });
 
 document.addEventListener("mousedown", function (e) {
-	if (appState !== AppState.Playing) return;
+	if (getAppState() !== AppState.Playing) return;
 	e.preventDefault();
 	findHoveredDie(e)?.onClick();
 });
@@ -133,57 +127,8 @@ function animate() {
 	// redraw the scene
 	renderer.render(scene, camera);
 }
-
-const AppState = {
-	Loading: "loader",
-	ScorePage: "score",
-	Playing: "playing",
-};
-
-let appState = AppState.Loading;
-function updateAppState(newState) {
-	console.log("update ", newState);
-	appState = newState;
-	for (let state of Object.values(AppState)) {
-		if (state === AppState.Playing) continue;
-		const layer = document.getElementById(state);
-		layer.style.opacity = state === newState ? "1" : "0";
-		layer.style.zIndex = state === newState ? "10" : "-10";
-	}
-	const playingMenu = document.querySelector("#playing menu") as HTMLMenuElement;
-	playingMenu.style.display = newState === AppState.Playing ? "flex" : "none";
+export function startAnimation() {
+	renderer.setAnimationLoop(animate);
 }
 
-updateAppState(AppState.ScorePage);
-
-let startedAnimation = false;
-document.getElementById("throw").addEventListener("click", () => {
-	if (!startedAnimation) {
-		startedAnimation = true;
-		renderer.setAnimationLoop(animate);
-	}
-	updateAppState(AppState.Playing);
-	throwDice();
-});
-document.getElementById("throw-again").addEventListener("click", (e) => {
-	switch (throwCount) {
-		case 0:
-		case 1:
-			throwCount++;
-			break;
-		case 2:
-			const btn = document.getElementById("throw-again") as HTMLButtonElement;
-			btn.disabled = true;
-		case 3:
-			for (let die of Die.dice) {
-				die.unlock();
-			}
-			throwCount = 1;
-			document.getElementById("throw-again").innerHTML = "RELANCER";
-			break;
-	}
-	throwDice();
-});
-document.getElementById("to-score").addEventListener("click", () => {
-	updateAppState(AppState.ScorePage);
-});
+import("./state.js");
