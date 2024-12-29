@@ -55,6 +55,8 @@ function createWall(physicsWorld) {
 // TODO: update wall positions to screen ratio
 function createWalls(physicsWorld) {
 	console.log(getX());
+	console.log(getFrontZ());
+	console.log(getSideAngle() * Math.PI);
 	const back = createWall(physicsWorld);
 	back.position.z = getBackZ();
 
@@ -65,12 +67,12 @@ function createWalls(physicsWorld) {
 	const left = createWall(physicsWorld);
 	left.position.x = -getX();
 	subscribe(() => (left.position.x = -getX()));
-	left.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI - getSideAngle());
+	left.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), getSideAngle());
 
 	const right = createWall(physicsWorld);
 	right.position.x = getX();
 	subscribe(() => (right.position.x = getX()));
-	right.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), Math.PI - getSideAngle());
+	right.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), getSideAngle());
 }
 
 export function createArena(scene, physicsWorld) {

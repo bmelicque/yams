@@ -25,10 +25,43 @@ export function findFullHouse(results) {
 	return others[0] === others[1];
 }
 
+function findShortStraight(results) {
+	if (results.indexOf(3) === -1) return false;
+	if (results.indexOf(4) === -1) return false;
+
+	const has1 = results.indexOf(1) !== -1;
+	const has2 = results.indexOf(2) !== -1;
+	const has5 = results.indexOf(5) !== -1;
+	const has6 = results.indexOf(6) !== -1;
+	return (has1 && has2) || (has2 && has5) || (has5 && has6);
+}
+function findLongStraight(results) {
+	if (results.indexOf(2) === -1) return false;
+	if (results.indexOf(3) === -1) return false;
+	if (results.indexOf(4) === -1) return false;
+	if (results.indexOf(5) === -1) return false;
+
+	return results.indexOf(1) === -1 || results.indexOf(6) === -1;
+}
+
+function sum(results) {
+	return results.reduce((acc, el) => acc + el, 0);
+}
+
 export function handleResults() {
 	const results = Die.stable.map((die) => die.getTopFace()).filter(Boolean);
 
-	if (findYams(results)) console.log("Yam's");
-	else if (findFOAK(results)) console.log("carré");
-	else if (findTOAK(results)) console.log("brelan");
+	for (let i = 1; i <= 6; i++) {
+		const element = document.querySelector(`[data-id="${i}"]`);
+		const count = results.filter((el) => el === i).length;
+		element.innerHTML = count * i + "";
+	}
+
+	document.querySelector('[data-id="toak"]').innerHTML = findTOAK(results) ? sum(results) : 0;
+	document.querySelector('[data-id="foak"]').innerHTML = findFOAK(results) ? sum(results) : 0;
+	document.querySelector('[data-id="full"]').innerHTML = findFullHouse(results) ? "25" : "0";
+	document.querySelector('[data-id="short-straight"]').innerHTML = findShortStraight(results) ? "30" : "0";
+	document.querySelector('[data-id="long-straight"]').innerHTML = findLongStraight(results) ? "40" : "0";
+	document.querySelector('[data-id="yams"]').innerHTML = findYams(results) ? "50" : "0";
+	document.querySelector('[data-id="chance"]').innerHTML = sum(results);
 }

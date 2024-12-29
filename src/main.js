@@ -89,7 +89,6 @@ function throwDice() {
 	const maxX = (7 * innerWidth) / innerHeight; // this is basically empiric for now
 	Die.dice.forEach((die, i) => die.throw(new CANNON.Vec3(maxX - 2, 3 + 2 * i, 4)));
 }
-throwDice();
 
 function findHoveredDie(e) {
 	const mouse = new THREE.Vector2(
@@ -104,7 +103,21 @@ function findHoveredDie(e) {
 	return Die.dice[ids[intersects[0]?.object.uuid]];
 }
 
+let currentDie = null;
+document.body.addEventListener("mousemove", (e) => {
+	if (appState !== AppState.Playing) return;
+	const die = findHoveredDie(e);
+	if (die == currentDie) {
+		return;
+	}
+	currentDie?.onLeave();
+	die?.onEnter();
+	currentDie = die;
+	document.body.style.cursor = die ? "pointer" : "default";
+});
+
 document.addEventListener("mousedown", function (e) {
+	if (appState !== AppState.Playing) return;
 	e.preventDefault();
 	findHoveredDie(e)?.onClick();
 });
@@ -120,45 +133,59 @@ function animate() {
 	// redraw the scene
 	renderer.render(scene, camera);
 }
-renderer.setAnimationLoop(animate);
 
+const AppState = {
+	Loading: "loader",
+	ScorePage: "score",
+	Playing: "playing",
+};
+
+let appState = AppState.Loading;
+function updateAppState(newState) {
+	console.log("update ", newState);
+	appState = newState;
+	for (let state of Object.values(AppState)) {
+		if (state === AppState.Playing) continue;
+		const layer = document.getElementById(state);
+		layer.style.opacity = state === newState ? "1" : "0";
+		layer.style.zIndex = state === newState ? "10" : "-10";
+	}
+	/** @type {HTMLMenuElement} */
+	const playingMenu = document.querySelector("#playing menu");
+	playingMenu.style.display = newState === AppState.Playing ? "flex" : "none";
+}
+
+updateAppState(AppState.ScorePage);
+
+let startedAnimation = false;
 document.getElementById("throw").addEventListener("click", () => {
+	if (!startedAnimation) {
+		startedAnimation = true;
+		renderer.setAnimationLoop(animate);
+	}
+	updateAppState(AppState.Playing);
+	throwDice();
+});
+document.getElementById("throw-again").addEventListener("click", (e) => {
 	switch (throwCount) {
 		case 0:
-			document.getElementById("throw").innerHTML = "RELANCER";
-			throwCount++;
-			break;
 		case 1:
-			document.getElementById("throw").innerHTML = "DERNIÈRE CHANCE...";
 			throwCount++;
 			break;
 		case 2:
-			document.getElementById("throw").innerHTML = "RECOMMENCER";
-			throwCount++;
-			break;
+			/** @type {HTMLButtonElement} */
+			const btn = document.getElementById("throw-again");
+			btn.disabled = true;
 		case 3:
 			for (let die of Die.dice) {
 				die.unlock();
 			}
 			throwCount = 1;
-			document.getElementById("throw").innerHTML = "RELANCER";
+			document.getElementById("throw-again").innerHTML = "RELANCER";
 			break;
 	}
 	throwDice();
 });
-
-let currentDie = null;
-document.body.addEventListener("mousemove", (e) => {
-	const die = findHoveredDie(e);
-	if (die == currentDie) {
-		return;
-	}
-	currentDie?.onLeave();
-	die?.onEnter();
-	currentDie = die;
-	document.body.style.cursor = die ? "pointer" : "default";
+document.getElementById("to-score").addEventListener("click", () => {
+	updateAppState(AppState.ScorePage);
 });
-
-const loader = document.getElementById("loader");
-loader.style.opacity = 0;
-loader.style.zIndex = -10;

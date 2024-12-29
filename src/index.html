@@ -27,15 +27,44 @@
 				</div>
 			</div>
 		</div>
-		<!-- <div class="pop-up">
-			<div class="pop-up__dialog">
-				<div class="pop-p__inner">COUCOU</div>
-			</div>
-		</div> -->
-		<div class="wrapper">
+		<div id="playing">
 			<canvas id="canvas"></canvas>
 			<menu id="menu">
-				<button id="throw">RELANCER</button>
+				<button id="throw-again">RELANCER</button>
+				<button id="to-score">SCORE</button>
+			</menu>
+		</div>
+		<div id="score">
+			<div class="table">
+				<div>1</div>
+				<div class="score" data-id="1"></div>
+				<div>2</div>
+				<div class="score" data-id="2"></div>
+				<div>3</div>
+				<div class="score" data-id="3"></div>
+				<div>4</div>
+				<div class="score" data-id="4"></div>
+				<div>5</div>
+				<div class="score" data-id="5"></div>
+				<div>6</div>
+				<div class="score" data-id="6"></div>
+				<div>Brelan</div>
+				<div class="score" data-id="toak"></div>
+				<div>Carré</div>
+				<div class="score" data-id="foak"></div>
+				<div>Full House</div>
+				<div class="score" data-id="full"></div>
+				<div>Petite Suite</div>
+				<div class="score" data-id="short-straight"></div>
+				<div>Grande Suite</div>
+				<div class="score" data-id="long-straight"></div>
+				<div>Yams</div>
+				<div class="score" data-id="yams"></div>
+				<div>Chance</div>
+				<div class="score" data-id="chance"></div>
+			</div>
+			<menu id="menu">
+				<button id="throw">NOUVEAU TOUR</button>
 			</menu>
 		</div>
 		<script type="module" src="/main.js"></script>

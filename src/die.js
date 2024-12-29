@@ -195,6 +195,9 @@ export class Die {
 		this.locked = false;
 		this.sleeping = false;
 
+		this.body.position = new CANNON.Vec3(0, 100 + 2 * Die.dice.length, 0);
+		this.mesh.position.copy(this.body.position);
+
 		this.body.addEventListener("sleep", () => {
 			const face = this.getTopFace();
 			if (!face) return this.impulse();
