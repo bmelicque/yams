@@ -26,12 +26,16 @@ type Entry = UpperEntry | LowerEntry;
 class ScoreSheet {
 	entries: Partial<Record<Entry, number>> = {};
 
-	get upperSection() {
+	get upperSectionSubTotal() {
 		return Object.values(UpperEntry).reduce((acc, curr) => acc + (this.entries[curr] ?? 0), 0);
 	}
 
 	get upperSectionBonus() {
-		return this.upperSection >= 63 ? 35 : 0;
+		return this.upperSectionSubTotal >= 63 ? 35 : 0;
+	}
+
+	get upperSection() {
+		return this.upperSectionSubTotal + this.upperSectionBonus;
 	}
 
 	get lowerSection() {
