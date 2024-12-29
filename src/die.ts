@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
-import { handleResults } from "./results";
 import { AppState, getThrowCount, updateAppState } from "./state";
+import { refreshScoreTable } from "./score";
 
 const PARAMS = {
 	SEGMENTS: 50,
@@ -206,7 +206,7 @@ export class Die {
 			if (!face) return this.impulse();
 			this.body.allowSleep = face == null;
 			Die.stable.push(this);
-			if (Die.stable.length === 5) handleResults();
+			if (Die.stable.length === 5) refreshScoreTable();
 			if (getThrowCount() === 3) updateAppState(AppState.ScorePage);
 		});
 	}
@@ -304,6 +304,10 @@ export class Die {
 			default:
 				return undefined;
 		}
+	}
+
+	static get results() {
+		return Die.stable.map((die) => die.getTopFace()).filter(Boolean);
 	}
 }
 

@@ -1,5 +1,6 @@
 import { Die, throwDice } from "./die";
 import { startAnimation } from "./main";
+import { isCompleted, refreshScoreTable } from "./score";
 
 export enum AppState {
 	Loading = "loader",
@@ -10,6 +11,7 @@ export enum AppState {
 let appState = AppState.Loading;
 let startedAnimation = false;
 let throwCount = 1;
+let saved = false;
 
 export function updateAppState(newState: AppState) {
 	appState = newState;
@@ -30,21 +32,29 @@ export function getThrowCount() {
 }
 function resetThrowCount() {
 	throwCount = 0;
-	const btn = document.getElementById("throw-again") as HTMLButtonElement;
-	btn.disabled = false;
+	getButtonById("throw-again").disabled = false;
 	Die.unlockAll();
+}
+export function saveScore() {
+	saved = true;
+	getButtonById("cancel").disabled = true;
+	if (!isCompleted()) getButtonById("throw").disabled = false;
 }
 
 document.getElementById("throw").addEventListener("click", () => {
-	console.log("start");
+	if (!saved) return;
+	saved = false;
+	refreshScoreTable();
+	getButtonById("throw").disabled = true;
+	getButtonById("cancel").disabled = false;
 	updateAppState(AppState.Playing);
 	resetThrowCount();
+	throwCount++;
 	throwDice();
 });
 document.getElementById("throw-again").addEventListener("click", (e) => {
 	if (throwCount === 2) {
-		const btn = document.getElementById("throw-again") as HTMLButtonElement;
-		btn.disabled = true;
+		getButtonById("throw-again").disabled = true;
 	}
 	throwCount++;
 	throwDice();
@@ -64,7 +74,12 @@ document.getElementById("start").addEventListener("click", () => {
 });
 
 document.getElementById("cancel").addEventListener("click", () => {
+	if (saved) return;
 	updateAppState(AppState.Playing);
 });
 
 document.getElementById("start").style.visibility = "visible";
+
+function getButtonById(id: string): HTMLButtonElement {
+	return document.getElementById(id) as HTMLButtonElement;
+}

@@ -4,6 +4,7 @@ import { createDice, Die } from "./die";
 import { createArena } from "./arena";
 import { subscribe } from "./viewport";
 import { AppState, getAppState } from "./state";
+import { refreshScoreTable } from "./score";
 
 const scene = new THREE.Scene();
 
@@ -129,6 +130,7 @@ function animate() {
 }
 export function startAnimation() {
 	renderer.setAnimationLoop(animate);
+	refreshScoreTable();
 }
 
 import("./state.js");

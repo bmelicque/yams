@@ -40,6 +40,7 @@ body {
 	position: relative;
 	width: 5rem;
 	height: 5rem;
+	margin-bottom: 10rem;
 }
 
 .loader__icon {
@@ -96,9 +97,12 @@ body {
 	}
 }
 
+.loader menu {
+	margin-top: 16rem;
+}
+
 button#start {
 	visibility: hidden;
-	margin-top: 16rem;
 }
 
 @keyframes turn {
@@ -162,7 +166,7 @@ menu {
 	gap: 1rem;
 }
 
-button {
+menu button {
 	font-size: 1.5rem;
 	font-weight: bold;
 	transition: 0.5s;
@@ -190,15 +194,29 @@ button {
 	left: 0;
 	right: 0;
 	z-index: -50;
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.8);
 	display: grid;
 	place-content: center;
 
 	.table {
-		display: grid;
-		grid-template-columns: 1fr 3ch;
-		gap: 0.5rem 4rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 		font-size: 1.5rem;
 		color: white;
+		margin-bottom: 4rem;
+	}
+
+	.score-line {
+		display: flex;
+		gap: 4rem;
+
+		.label {
+			width: 15ch;
+		}
+
+		.saved-score {
+			min-width: 2ch;
+		}
 	}
 }

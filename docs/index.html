@@ -10,8 +10,8 @@
 			rel="stylesheet"
 		/>
 		<style></style>
-		<script type="module" crossorigin src="./assets/index-CkFO2TXD.js"></script>
-		<link rel="stylesheet" crossorigin href="./assets/index-DGuN7WBy.css">
+		<script type="module" crossorigin src="./assets/index-B5IDIIHL.js"></script>
+		<link rel="stylesheet" crossorigin href="./assets/index-dac9y32w.css">
 	</head>
 	<body>
 		<div id="loader">
@@ -28,7 +28,9 @@
 					<div class="loader__icon__dots--two"></div>
 				</div>
 			</div>
-			<button id="start">COMMENCER</button>
+			<menu>
+				<button id="start">COMMENCER</button>
+			</menu>
 		</div>
 		<div id="playing">
 			<canvas id="canvas"></canvas>
@@ -39,38 +41,20 @@
 		</div>
 		<div id="score">
 			<h2 id="remaining">LANCERS RESTANTS: <span>2</span></h2>
-			<div class="table">
-				<div>1</div>
-				<div class="score" data-id="1"></div>
-				<div>2</div>
-				<div class="score" data-id="2"></div>
-				<div>3</div>
-				<div class="score" data-id="3"></div>
-				<div>4</div>
-				<div class="score" data-id="4"></div>
-				<div>5</div>
-				<div class="score" data-id="5"></div>
-				<div>6</div>
-				<div class="score" data-id="6"></div>
-				<div>Brelan</div>
-				<div class="score" data-id="toak"></div>
-				<div>Carré</div>
-				<div class="score" data-id="foak"></div>
-				<div>Full House</div>
-				<div class="score" data-id="full"></div>
-				<div>Petite Suite</div>
-				<div class="score" data-id="short-straight"></div>
-				<div>Grande Suite</div>
-				<div class="score" data-id="long-straight"></div>
-				<div>Yams</div>
-				<div class="score" data-id="yams"></div>
-				<div>Chance</div>
-				<div class="score" data-id="chance"></div>
-			</div>
+			<div class="table"></div>
 			<menu id="menu">
-				<button id="throw">NOUVEAU TOUR</button>
+				<button id="throw" disabled>NOUVEAU TOUR</button>
 				<button id="cancel">RETOUR</button>
 			</menu>
 		</div>
 	</body>
+
+	<template id="score-line">
+		<div class="score-line">
+			<div class="label"></div>
+			<div class="saved-score"></div>
+			<button class="save-score">←</button>
+			<div class="current-score"></div>
+		</div>
+	</template>
 </html>
