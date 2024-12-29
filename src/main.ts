@@ -150,8 +150,7 @@ function updateAppState(newState) {
 		layer.style.opacity = state === newState ? "1" : "0";
 		layer.style.zIndex = state === newState ? "10" : "-10";
 	}
-	/** @type {HTMLMenuElement} */
-	const playingMenu = document.querySelector("#playing menu");
+	const playingMenu = document.querySelector("#playing menu") as HTMLMenuElement;
 	playingMenu.style.display = newState === AppState.Playing ? "flex" : "none";
 }
 
@@ -173,8 +172,7 @@ document.getElementById("throw-again").addEventListener("click", (e) => {
 			throwCount++;
 			break;
 		case 2:
-			/** @type {HTMLButtonElement} */
-			const btn = document.getElementById("throw-again");
+			const btn = document.getElementById("throw-again") as HTMLButtonElement;
 			btn.disabled = true;
 		case 3:
 			for (let die of Die.dice) {

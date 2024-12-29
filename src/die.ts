@@ -186,14 +186,16 @@ export class Die {
 	static hoveredColor = "orange";
 	static lockedColor = "orange";
 	static defaultColor = "black";
-	static dice = [];
-	static stable = [];
+	static dice: Die[] = [];
+	static stable: Die[] = [];
 
-	constructor(mesh, body) {
+	mesh: THREE.Group;
+	body: CANNON.Body;
+	locked = false;
+
+	constructor(mesh: THREE.Group, body: CANNON.Body) {
 		this.mesh = mesh;
 		this.body = body;
-		this.locked = false;
-		this.sleeping = false;
 
 		this.body.position = new CANNON.Vec3(0, 100 + 2 * Die.dice.length, 0);
 		this.mesh.position.copy(this.body.position);
@@ -202,7 +204,6 @@ export class Die {
 			const face = this.getTopFace();
 			if (!face) return this.impulse();
 			this.body.allowSleep = face == null;
-			this.sleeping = face != null;
 			Die.stable.push(this);
 			if (Die.stable.length === 5) handleResults();
 		});
@@ -221,9 +222,9 @@ export class Die {
 		this.changeDotColor(this.locked ? Die.lockedColor : Die.defaultColor);
 	}
 
-	changeDotColor(color) {
+	changeDotColor(color: THREE.ColorRepresentation) {
 		for (let filler of this.mesh.children.slice(1)) {
-			filler.material = new THREE.MeshStandardMaterial({ color, side: THREE.DoubleSide });
+			(filler as THREE.Mesh).material = new THREE.MeshStandardMaterial({ color, side: THREE.DoubleSide });
 		}
 	}
 
@@ -244,7 +245,7 @@ export class Die {
 
 		// set initial rotation
 		this.mesh.rotation.set(2 * Math.PI * Math.random(), 0, 2 * Math.PI * Math.random());
-		this.body.quaternion.copy(this.mesh.quaternion);
+		this.body.quaternion.copy(this.mesh.quaternion as unknown as CANNON.Quaternion);
 
 		const xImpulse = -(5 + 8 * Math.random());
 		const zImpulse = -(5 + 8 * Math.random());

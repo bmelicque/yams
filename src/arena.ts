@@ -38,8 +38,8 @@ function createFloor(scene, physicsWorld) {
 		type: CANNON.Body.STATIC,
 		shape: new CANNON.Plane(),
 	});
-	body.position.copy(mesh.position);
-	body.quaternion.copy(mesh.quaternion);
+	body.position.copy(mesh.position as unknown as CANNON.Vec3);
+	body.quaternion.copy(mesh.quaternion as unknown as CANNON.Quaternion);
 	physicsWorld.addBody(body);
 }
 
@@ -61,18 +61,18 @@ function createWalls(physicsWorld) {
 	back.position.z = getBackZ();
 
 	const front = createWall(physicsWorld);
-	front.quaternion.setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI);
+	front.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI);
 	front.position.z = getFrontZ();
 
 	const left = createWall(physicsWorld);
 	left.position.x = -getX();
 	subscribe(() => (left.position.x = -getX()));
-	left.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), getSideAngle());
+	left.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), getSideAngle());
 
 	const right = createWall(physicsWorld);
 	right.position.x = getX();
 	subscribe(() => (right.position.x = getX()));
-	right.quaternion.setFromAxisAngle(new THREE.Vector3(0, -1, 0), getSideAngle());
+	right.quaternion.setFromAxisAngle(new CANNON.Vec3(0, -1, 0), getSideAngle());
 }
 
 export function createArena(scene, physicsWorld) {
